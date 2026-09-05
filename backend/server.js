@@ -3,6 +3,8 @@ const cors = require("cors");
 const authRoute = require("./routes/auth");
 const uploadRoute = require("./routes/upload");
 const summarizeRoute = require("./routes/summarize");
+const podcastRoute = require("./routes/podcast");
+const quizRoute = require("./routes/quiz");
 
 const app = express();
 
@@ -12,7 +14,8 @@ app.use(express.json());
 app.use("/api", authRoute);
 app.use("/api/upload", uploadRoute);
 app.use("/api/summarize", summarizeRoute);
-
+app.use("/api/podcast", podcastRoute);
+app.use("/api/quiz", quizRoute);
 
 app.get("/", (req, res) => {
   res.send("ListenIn AI Backend Running");

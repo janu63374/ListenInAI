@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const generateSummary = require("../utils/gemini");
+const generatePodcast = require("../utils/podcastGenerator");
 
 router.post("/", async (req, res) => {
 
@@ -9,10 +9,10 @@ router.post("/", async (req, res) => {
 
     const { text } = req.body;
 
-    const summary = await generateSummary(text);
+    const podcast = await generatePodcast(text);
 
     res.json({
-      summary
+      podcast
     });
 
   } catch (error) {
@@ -24,7 +24,6 @@ router.post("/", async (req, res) => {
   });
 
 }
-
 });
 
 module.exports = router;

@@ -1,11 +1,15 @@
 import { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const registerUser = async () => {
     try {
@@ -19,6 +23,7 @@ function Register() {
       );
 
       alert(response.data.message);
+      navigate("/login");
 
     } catch (error) {
       console.log(error);
@@ -57,6 +62,14 @@ function Register() {
       <button onClick={registerUser}>
         Register
       </button>
+
+      <p>
+      Already have an account?
+      <Link to="/login">
+       Login Here
+      </Link>
+      </p>
+
     </div>
   );
 }
