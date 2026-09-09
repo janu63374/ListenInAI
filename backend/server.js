@@ -5,6 +5,9 @@ const uploadRoute = require("./routes/upload");
 const summarizeRoute = require("./routes/summarize");
 const podcastRoute = require("./routes/podcast");
 const quizRoute = require("./routes/quiz");
+const analyticsRoute = require("./routes/analytics");
+const getAnalyticsRoute = require("./routes/getAnalytics");
+const voiceQARoute = require("./routes/voiceqa");
 
 const app = express();
 
@@ -16,6 +19,9 @@ app.use("/api/upload", uploadRoute);
 app.use("/api/summarize", summarizeRoute);
 app.use("/api/podcast", podcastRoute);
 app.use("/api/quiz", quizRoute);
+app.use("/api/analytics", analyticsRoute);
+app.use("/api/getAnalytics", getAnalyticsRoute);
+app.use("/api/voiceqa", voiceQARoute);
 
 app.get("/", (req, res) => {
   res.send("ListenIn AI Backend Running");

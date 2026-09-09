@@ -6,11 +6,15 @@ function Upload() {
   const [file, setFile] = useState(null);
   const [content, setContent] = useState("");
   const [summary, setSummary] = useState("");
+  const [activePage, setActivePage] = useState("podcast");
   const [podcastScript, setPodcastScript] = useState("");
   const [quiz, setQuiz] = useState([]);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [score, setScore] = useState(null);
   const [showResults, setShowResults] = useState(false);
+  const [analytics, setAnalytics] = useState(null);
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
 
   const uploadPDF = async () => {
 
@@ -100,7 +104,7 @@ const handleAnswer = (questionIndex, selectedOption) => {
 
 };
 
-const calculateScore = () => {
+const calculateScore = async () => {
 
   let correct = 0;
 
@@ -112,8 +116,31 @@ const calculateScore = () => {
 
   });
 
+  const accuracy = Math.round(
+    (correct / quiz.length) * 100
+  );
+
   setScore(correct);
   setShowResults(true);
+
+  try {
+
+    await axios.post(
+      "http://localhost:5000/api/analytics",
+      {
+        email: "user@gmail.com",
+        score: correct,
+        accuracy: accuracy
+      }
+    );
+
+    console.log("Analytics saved");
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
 
 };
 
@@ -171,8 +198,108 @@ const stopPodcast = () => {
   window.speechSynthesis.cancel();
 }; 
 
+const getAnalytics = async () => {
+
+  try {
+
+    const response = await axios.get(
+      "http://localhost:5000/api/getAnalytics"
+    );
+
+    setAnalytics(response.data);
+
+  } catch (error) {
+
+    console.log(error);
+    alert("Failed to load analytics");
+
+  }
+
+};
+
+const startListening = () => {
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  const recognition = new SpeechRecognition();
+
+  recognition.lang = "en-US";
+
+  recognition.start();
+
+  recognition.onresult = (event) => {
+
+    const transcript =
+      event.results[0][0].transcript;
+
+    setQuestion(transcript);
+
+  };
+
+};
+
+const askQuestion = async () => {
+
+  try {
+
+    const response = await axios.post(
+      "http://localhost:5000/api/voiceqa",
+      {
+        question,
+        content
+      }
+    );
+
+    setAnswer(response.data.answer);
+
+    const speech =
+      new SpeechSynthesisUtterance(
+        response.data.answer
+      );
+
+    window.speechSynthesis.speak(speech);
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert("Voice Q&A failed");
+
+  }
+
+};
+
   return (
     <div>
+
+    <h1>ListenIn AI</h1>
+
+<hr />
+
+<button onClick={() => setActivePage("home")}>
+  Home
+</button>
+
+<button onClick={() => setActivePage("summary")}>
+  Summary
+</button>
+
+<button onClick={() => setActivePage("podcast")}>
+  Podcast
+</button>
+
+<button onClick={() => setActivePage("quiz")}>
+  Quiz & Analytics
+</button>
+
+<button onClick={() => setActivePage("voice")}>
+  Voice Q&A
+</button>
+
+<hr />
+
       <h1>Upload PDF</h1>
 
       <input
@@ -193,20 +320,30 @@ const stopPodcast = () => {
        readOnly
      />
 
-     <h2>AI Summary</h2>
+{activePage === "summary" && (
 
-      <button onClick={generateSummary}>
-      Generate Summary
-      </button>
-      <br /><br />
+<>
+  <h2>AI Summary</h2>
 
-<textarea
-  rows="10"
-  cols="100"
-  value={summary}
-  readOnly
-/> 
+  <button onClick={generateSummary}>
+    Generate Summary
+  </button>
 
+  <br /><br />
+
+  <textarea
+    rows="10"
+    cols="100"
+    value={summary}
+    readOnly
+  />
+</>
+
+)}
+
+{activePage ==="podcast" && (
+
+<>
 <h2>AI Podcast Script</h2>
 
 
@@ -240,6 +377,12 @@ const stopPodcast = () => {
   ⏹ Stop
 </button>
 
+</>
+)}
+
+
+{activePage ==="quiz" &&(
+<>
 <h2>AI Quiz</h2>
 
 <button onClick={generateQuiz}>
@@ -325,6 +468,84 @@ const stopPodcast = () => {
 
   </div>
 
+)}
+
+<button onClick={getAnalytics}>
+  Show Learning Analytics
+</button>
+
+{analytics && (
+
+  <div
+    style={{
+      border: "1px solid black",
+      padding: "15px",
+      marginTop: "20px"
+    }}
+  >
+
+    <h2>📊 Learning Analytics</h2>
+
+    <p>
+      Total Quizzes Taken:
+      {analytics.totalQuizzes}
+    </p>
+
+    <p>
+      Best Score:
+      {analytics.bestScore}
+    </p>
+
+    <p>
+      Average Accuracy:
+      {analytics.averageAccuracy}%
+    </p>
+
+  </div>
+
+)}
+</>
+)}
+
+
+{activePage ==="voice" && (
+<>
+<h2>🎤 Voice Q&A</h2>
+
+<button onClick={startListening}>
+  Start Listening
+</button>
+
+<br /><br />
+
+<input
+  type="text"
+  value={question}
+  onChange={(e) =>
+    setQuestion(e.target.value)
+  }
+  placeholder="Ask a question..."
+  style={{
+    width: "500px",
+    padding: "10px"
+  }}
+/>
+
+<br /><br />
+
+<button onClick={askQuestion}>
+  Ask AI
+</button>
+
+<br /><br />
+
+<textarea
+  rows="8"
+  cols="80"
+  value={answer}
+  readOnly
+/>
+</>
 )}
 
     </div>
