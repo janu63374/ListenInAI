@@ -10,7 +10,12 @@ async function generateAnswer(question, content) {
     model: "gemini-3.6-flash",
 
     contents: `
-Answer the user's question ONLY using the information from the PDF content.
+Answer the question based on the text.
+
+IMPORTANT:
+- Do not use *, **, #, -, or any markdown symbols.
+- Return plain text only.
+- Use simple paragraphs and bullet points without special formatting.
 
 PDF Content:
 ${content.substring(0, 5000)}

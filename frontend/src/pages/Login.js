@@ -2,6 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import "../styles/Login.css";
+import logo from "../assets/logo.png";
 
 function Login() {
 
@@ -32,38 +34,66 @@ function Login() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
+  <div className="login-container">
 
-      <input
-        type="email"
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
+<div className="login-left">
 
-      <br /><br />
+  <img
+    src={logo}
+    alt="ListenIn AI Logo"
+    className="auth-logo"
+  />
 
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+  <h1>ListenIn AI</h1>
 
-      <br /><br />
+  <p>
+    Upload PDFs<br />
+    Generate AI Summaries<br />
+    Listen to Podcasts<br />
+    Take Smart Quizzes<br />
+    Ask Questions by Voice
+  </p>
 
-      <button onClick={loginUser}>
-        Login
-      </button>
+</div>
 
-      <p>
-      Don't have an account?
-      <Link to="/">
-      Register Here
-     </Link>
-     </p>
+    <div className="login-right">
+
+      <div className="login-card">
+
+        <h2>Welcome Back</h2>
+
+        <input
+          type="email"
+          placeholder="Enter your email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="Enter your password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button
+          className="login-btn"
+          onClick={loginUser}
+        >
+          Login
+        </button>
+
+        <p className="register-link">
+          Don't have an account?{" "}
+          <Link to="/">
+            Register Here
+          </Link>
+        </p>
+
+      </div>
 
     </div>
-  );
+
+  </div>
+);
 }
 
 export default Login;

@@ -1,5 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
+import "../styles/Upload.css";
+import logo from "../assets/logo.png";
+import bannerImage from "../assets/hero.png";
 
 function Upload() {
 
@@ -274,9 +277,27 @@ const askQuestion = async () => {
   return (
     <div>
 
-    <h1>ListenIn AI</h1>
+    <div className="header">
 
-<hr />
+  <div className="logo-section">
+
+    <img
+      src={logo}
+      alt="ListenIn AI Logo"
+      className="logo"
+    />
+
+    <div>
+      <h1>ListenIn AI</h1>
+      <p>Upload Anything. Learn by Listening.</p>
+    </div>
+
+  </div>
+
+</div>
+
+
+<div className="navbar">
 
 <button onClick={() => setActivePage("home")}>
   Home
@@ -298,9 +319,17 @@ const askQuestion = async () => {
   Voice Q&A
 </button>
 
-<hr />
+</div>
 
-      <h1>Upload PDF</h1>
+<div className="banner">
+  <img
+    src={bannerImage}
+    alt="ListenIn AI Banner"
+  />
+</div>
+
+<div className="container">
+      <h2>Upload PDF</h2>
 
       <input
         type="file"
@@ -548,6 +577,7 @@ const askQuestion = async () => {
 </>
 )}
 
+</div>
     </div>
   );
 }

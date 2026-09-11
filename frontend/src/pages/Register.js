@@ -2,6 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import "../styles/Register.css";
+import logo from "../assets/logo.png";
 
 function Register() {
 
@@ -32,46 +34,72 @@ function Register() {
   };
 
   return (
-    <div>
-      <h1>Register</h1>
+  <div className="register-container">
 
-      <input
-        type="text"
-        placeholder="Name"
-        onChange={(e) => setName(e.target.value)}
-      />
+    <div className="register-left">
 
-      <br /><br />
+      <img
+  src={logo}
+  alt="ListenIn AI Logo"
+  className="auth-logo"
+/>
 
-      <input
-        type="email"
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
-
-      <br /><br />
-
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <br /><br />
-
-      <button onClick={registerUser}>
-        Register
-      </button>
+      <h1>ListenIn AI</h1>
 
       <p>
-      Already have an account?
-      <Link to="/login">
-       Login Here
-      </Link>
+        Upload PDFs<br />
+        Generate AI Summaries<br />
+        Listen to Podcasts<br />
+        Take Smart Quizzes<br />
+        Ask Questions by Voice
       </p>
 
     </div>
-  );
+
+    <div className="register-right">
+
+      <div className="register-card">
+
+        <h2>Create Account</h2>
+
+        <input
+          type="text"
+          placeholder="Enter your name"
+          onChange={(e) => setName(e.target.value)}
+        />
+
+        <input
+          type="email"
+          placeholder="Enter your email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="Enter your password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button
+          className="register-btn"
+          onClick={registerUser}
+        >
+          Register
+        </button>
+
+        <p className="login-link">
+          Already have an account?{" "}
+          <Link to="/login">
+            Login Here
+          </Link>
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+);
 }
 
 export default Register;
