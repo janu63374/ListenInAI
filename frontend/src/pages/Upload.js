@@ -3,6 +3,8 @@ import axios from "axios";
 import "../styles/Upload.css";
 import logo from "../assets/logo.png";
 import bannerImage from "../assets/hero.png";
+import { FaUserCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function Upload() {
 
@@ -18,6 +20,8 @@ function Upload() {
   const [analytics, setAnalytics] = useState(null);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const navigate = useNavigate();
 
   const uploadPDF = async () => {
 
@@ -291,6 +295,48 @@ const askQuestion = async () => {
       <h1>ListenIn AI</h1>
       <p>Upload Anything. Learn by Listening.</p>
     </div>
+
+  </div>
+
+  <div className="profile-section">
+
+    <FaUserCircle
+      size={40}
+      onClick={() =>
+        setShowProfileMenu(!showProfileMenu)
+      }
+    />
+
+    {showProfileMenu && (
+
+      <div className="profile-menu">
+
+        <p>My Profile</p>
+
+        <p
+          onClick={() => {
+            setActivePage("quiz");
+            getAnalytics();
+          }}
+        >
+          Learning Analytics
+        </p>
+
+        <p>Settings</p>
+
+        <p>About ListenIn AI</p>
+
+        <p
+          onClick={() => {
+            navigate("/login");
+          }}
+        >
+          Logout
+        </p>
+
+      </div>
+
+    )}
 
   </div>
 

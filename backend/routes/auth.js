@@ -43,17 +43,21 @@ router.post("/login", (req, res) => {
         return res.status(500).json(err);
       }
 
-      if (result.length > 0) {
-        res.json({
-          success: true,
-          message: "Login successful"
-        });
-      } else {
-        res.json({
-          success: false,
-          message: "Invalid email or password"
-        });
-      }
+if (result.length > 0) {
+
+  res.json({
+    success: true,
+    message: "Login successful"
+  });
+
+} else {
+
+  return res.status(401).json({
+    success: false,
+    message: "Invalid email or password"
+  });
+
+}
     }
   );
 });

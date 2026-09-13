@@ -12,26 +12,32 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const loginUser = async () => {
+const loginUser = async () => {
 
-    try {
+  try {
 
-      const response = await axios.post(
-        "http://localhost:5000/api/login",
-        {
-          email,
-          password
-        }
-      );
+    const response = await axios.post(
+      "http://localhost:5000/api/login",
+      {
+        email,
+        password
+      }
+    );
 
-      alert(response.data.message);
-      navigate("/upload");
+    alert(response.data.message);
 
-    } catch (error) {
-      console.log(error);
-      alert("Login failed");
-    }
-  };
+    navigate("/upload");
+
+  } catch (error) {
+
+    alert(
+      error.response?.data?.message ||
+      "Invalid email or password"
+    );
+
+  }
+
+};
 
   return (
   <div className="login-container">
