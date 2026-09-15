@@ -47,7 +47,8 @@ if (result.length > 0) {
 
   res.json({
     success: true,
-    message: "Login successful"
+    message: "Login successful",
+    user: result[0]
   });
 
 } else {

@@ -5,15 +5,21 @@ const router = express.Router();
 
 router.get("/", (req, res) => {
 
-  const query = `
-    SELECT
-      COUNT(*) AS totalQuizzes,
-      MAX(score) AS bestScore,
-      ROUND(AVG(accuracy)) AS averageAccuracy
-    FROM analytics
-  `;
+  const { email } = req.query;
 
-  db.query(query, (err, results) => {
+const query = `
+  SELECT
+    COUNT(*) AS totalQuizzes,
+    MAX(score) AS bestScore,
+    ROUND(AVG(accuracy)) AS averageAccuracy
+  FROM analytics
+  WHERE email = ?
+`;
+
+db.query(
+  query,
+  [email],
+  (err, results) => {
 
     if (err) {
       console.log(err);

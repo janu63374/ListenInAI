@@ -1,10 +1,10 @@
-import { useState } from "react";
 import axios from "axios";
 import "../styles/Upload.css";
 import logo from "../assets/logo.png";
 import bannerImage from "../assets/hero.png";
 import { FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function Upload() {
 
@@ -22,6 +22,23 @@ function Upload() {
   const [answer, setAnswer] = useState("");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
+
+  useEffect(() => {
+
+  const loggedUser =
+    JSON.parse(localStorage.getItem("user"));
+
+  if (!loggedUser) {
+    navigate("/login");
+    return;
+  }
+
+  setUser(loggedUser);
+
+}, [navigate]);
 
   const uploadPDF = async () => {
 
@@ -135,7 +152,7 @@ const calculateScore = async () => {
     await axios.post(
       "http://localhost:5000/api/analytics",
       {
-        email: "user@gmail.com",
+        email: user.email,
         score: correct,
         accuracy: accuracy
       }
@@ -210,7 +227,7 @@ const getAnalytics = async () => {
   try {
 
     const response = await axios.get(
-      "http://localhost:5000/api/getAnalytics"
+  `http://localhost:5000/api/getAnalytics?email=${user.email}`
     );
 
     setAnalytics(response.data);
@@ -311,23 +328,51 @@ const askQuestion = async () => {
 
       <div className="profile-menu">
 
-        <p>My Profile</p>
+        <p
+  onClick={() => {
+    setShowProfile(true);
+    setShowProfileMenu(false);
+  }}
+>
+  My Profile
+</p>
+
+  <p
+  onClick={async () => {
+
+    setActivePage("quiz");
+
+    await getAnalytics();
+
+    setShowProfileMenu(false);
+
+    setTimeout(() => {
+
+      document
+        .getElementById("analytics-section")
+        ?.scrollIntoView({
+          behavior: "smooth"
+        });
+
+    }, 300);
+
+  }}
+>
+  Learning Analytics
+</p>
+
+<p
+  onClick={() => {
+    setShowAbout(true);
+    setShowProfileMenu(false);
+  }}
+>
+  About ListenIn AI
+</p>
 
         <p
           onClick={() => {
-            setActivePage("quiz");
-            getAnalytics();
-          }}
-        >
-          Learning Analytics
-        </p>
-
-        <p>Settings</p>
-
-        <p>About ListenIn AI</p>
-
-        <p
-          onClick={() => {
+            localStorage.removeItem("user");
             navigate("/login");
           }}
         >
@@ -373,6 +418,83 @@ const askQuestion = async () => {
     alt="ListenIn AI Banner"
   />
 </div>
+
+{showAbout && (
+
+  <div className="profile-overlay">
+
+    <div className="about-card">
+
+      <h2>About ListenIn AI</h2>
+
+      <p>
+        Upload Anything. Learn by Listening.
+      </p>
+
+      <hr />
+
+      <h3>Features</h3>
+
+      <ul>
+        <li>📄 PDF Upload</li>
+        <li>🤖 AI Summary</li>
+        <li>🎙️ AI Podcast</li>
+        <li>📝 AI Quiz</li>
+        <li>📊 Learning Analytics</li>
+        <li>🎤 Voice Q&A</li>
+      </ul>
+
+      <hr />
+
+      <p>
+        <strong>Version:</strong> 1.0
+      </p>
+
+      <p>
+        <strong>Developed By:</strong><br />
+        Janani S<br />
+        M.Sc. Computer Science
+      </p>
+
+      <button
+        onClick={() => setShowAbout(false)}
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+)}
+
+{showProfile && user && (
+
+  <div className="profile-overlay">
+
+    <div className="profile-card">
+
+      <h1>👤</h1>
+
+      <p>
+        <strong>Name:</strong> {user.name}
+      </p>
+
+      <p>
+        <strong>Email:</strong> {user.email}
+      </p>
+
+      <button
+        onClick={() => setShowProfile(false)}
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+)}
 
 <div className="container">
       <h2>Upload PDF</h2>
@@ -551,7 +673,7 @@ const askQuestion = async () => {
 
 {analytics && (
 
-  <div
+  <div id="analytics-section"
     style={{
       border: "1px solid black",
       padding: "15px",

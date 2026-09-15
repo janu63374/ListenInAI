@@ -24,9 +24,22 @@ const loginUser = async () => {
       }
     );
 
-    alert(response.data.message);
+    if (response.data.success) {
 
-    navigate("/upload");
+  localStorage.setItem(
+    "user",
+    JSON.stringify(response.data.user)
+  );
+
+  alert(response.data.message);
+
+  navigate("/upload");
+
+} else {
+
+  alert(response.data.message);
+
+}
 
   } catch (error) {
 
