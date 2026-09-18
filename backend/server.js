@@ -8,6 +8,8 @@ const quizRoute = require("./routes/quiz");
 const analyticsRoute = require("./routes/analytics");
 const getAnalyticsRoute = require("./routes/getAnalytics");
 const voiceQARoute = require("./routes/voiceqa");
+const historyRoute = require("./routes/history");
+const updateSummaryRoute = require("./routes/updateSummary");
 
 const app = express();
 
@@ -22,6 +24,8 @@ app.use("/api/quiz", quizRoute);
 app.use("/api/analytics", analyticsRoute);
 app.use("/api/getAnalytics", getAnalyticsRoute);
 app.use("/api/voiceqa", voiceQARoute);
+app.use("/api/history", historyRoute);
+app.use("/api/updateSummary", updateSummaryRoute);
 
 app.get("/", (req, res) => {
   res.send("ListenIn AI Backend Running");

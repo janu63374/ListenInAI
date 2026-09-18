@@ -25,6 +25,7 @@ function Upload() {
   const [user, setUser] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
+  const [historyId, setHistoryId] = useState(null);
 
   useEffect(() => {
 
@@ -44,6 +45,14 @@ function Upload() {
 
     const formData = new FormData();
     formData.append("pdf", file);
+
+    const user =
+JSON.parse(localStorage.getItem("user"));
+
+formData.append(
+  "email",
+  user.email
+);
     
     const response = await axios.post(
   "http://localhost:5000/api/upload",
@@ -51,6 +60,12 @@ function Upload() {
    );
 
     setContent(response.data.text);
+
+      setHistoryId(
+    response.data.historyId
+  );
+
+  console.log(response.data);
 
     alert("Upload Successful");
   };
@@ -67,6 +82,14 @@ function Upload() {
     );
 
     setSummary(response.data.summary);
+
+    await axios.post(
+  "http://localhost:5000/api/updateSummary",
+  {
+    historyId,
+    summary: response.data.summary
+  }
+);
 
   } catch (error) {
 
@@ -335,6 +358,14 @@ const askQuestion = async () => {
   }}
 >
   My Profile
+</p>
+
+<p
+  onClick={() => {
+    navigate("/history");
+  }}
+>
+  My History
 </p>
 
   <p
