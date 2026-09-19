@@ -10,6 +10,7 @@ const getAnalyticsRoute = require("./routes/getAnalytics");
 const voiceQARoute = require("./routes/voiceqa");
 const historyRoute = require("./routes/history");
 const updateSummaryRoute = require("./routes/updateSummary");
+const deleteHistoryRoute = require("./routes/deleteHistory");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use("/api/getAnalytics", getAnalyticsRoute);
 app.use("/api/voiceqa", voiceQARoute);
 app.use("/api/history", historyRoute);
 app.use("/api/updateSummary", updateSummaryRoute);
+app.use("/api/deleteHistory", deleteHistoryRoute);
 
 app.get("/", (req, res) => {
   res.send("ListenIn AI Backend Running");
