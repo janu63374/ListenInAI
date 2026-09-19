@@ -18,6 +18,40 @@ function History() {
 
   }, []);
 
+  const deleteHistory = async (id) => {
+
+  const confirmDelete =
+    window.confirm(
+      "Are you sure you want to delete this history?"
+    );
+
+  if (!confirmDelete) return;
+
+  try {
+
+    await axios.delete(
+      `http://localhost:5000/api/deleteHistory/${id}`
+    );
+
+alert("History deleted");
+
+const user =
+  JSON.parse(
+    localStorage.getItem("user")
+  );
+
+loadHistory(user.email);
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert("Delete failed");
+
+  }
+
+};
+
   const loadHistory = async (email) => {
 
     try {
@@ -60,6 +94,14 @@ function History() {
 >
   {item.file_name}
 </h3>
+
+<button
+  onClick={() =>
+    deleteHistory(item.id)
+  }
+>
+  Delete
+</button>
 
           <p>{item.created_at}</p>
 
