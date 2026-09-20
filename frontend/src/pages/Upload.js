@@ -26,6 +26,7 @@ function Upload() {
   const [showProfile, setShowProfile] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [historyId, setHistoryId] = useState(null);
+  const [loading, setLoading] = useState("");
 
   useEffect(() => {
 
@@ -70,9 +71,11 @@ formData.append(
     alert("Upload Successful");
   };
 
-  const generateSummary = async () => {
+const generateSummary = async () => {
 
   try {
+
+    setLoading("summary");
 
     const response = await axios.post(
       "http://localhost:5000/api/summarize",
@@ -84,24 +87,31 @@ formData.append(
     setSummary(response.data.summary);
 
     await axios.post(
-  "http://localhost:5000/api/updateSummary",
-  {
-    historyId,
-    summary: response.data.summary
-  }
-);
+      "http://localhost:5000/api/updateSummary",
+      {
+        historyId,
+        summary: response.data.summary
+      }
+    );
 
   } catch (error) {
 
     console.log(error);
     alert("Summary generation failed");
 
+  } finally {
+
+    setLoading("");
+
   }
+
 };
 
 const generatePodcast = async () => {
 
   try {
+
+    setLoading("podcast");
 
     const response = await axios.post(
       "http://localhost:5000/api/podcast",
@@ -117,12 +127,19 @@ const generatePodcast = async () => {
     console.log(error);
     alert("Podcast generation failed");
 
+  } finally {
+
+    setLoading("");
+
   }
+
 };
 
 const generateQuiz = async () => {
 
   try {
+
+    setLoading("quiz");
 
     const response = await axios.post(
       "http://localhost:5000/api/quiz",
@@ -137,6 +154,10 @@ const generateQuiz = async () => {
 
     console.log(error);
     alert("Quiz generation failed");
+
+  } finally {
+
+    setLoading("");
 
   }
 
@@ -291,6 +312,8 @@ const askQuestion = async () => {
 
   try {
 
+    setLoading("voice");
+
     const response = await axios.post(
       "http://localhost:5000/api/voiceqa",
       {
@@ -313,6 +336,10 @@ const askQuestion = async () => {
     console.log(error);
 
     alert("Voice Q&A failed");
+
+  } finally {
+
+    setLoading("");
 
   }
 
@@ -553,9 +580,16 @@ const askQuestion = async () => {
 <>
   <h2>AI Summary</h2>
 
-  <button onClick={generateSummary}>
-    Generate Summary
-  </button>
+<button
+  onClick={generateSummary}
+  disabled={loading === "summary"}
+>
+  {
+    loading === "summary"
+      ? "⏳ Generating Summary..."
+      : "Generate Summary"
+  }
+</button>
 
   <br /><br />
 
@@ -575,9 +609,16 @@ const askQuestion = async () => {
 <h2>AI Podcast Script</h2>
 
 
-      <button onClick={generatePodcast}>
-      Generate Podcast
-       </button>
+<button
+  onClick={generatePodcast}
+  disabled={loading === "podcast"}
+>
+  {
+    loading === "podcast"
+      ? "⏳ Generating Podcast..."
+      : "Generate Podcast"
+  }
+</button>
       <br /><br />
 
 <textarea
@@ -613,8 +654,15 @@ const askQuestion = async () => {
 <>
 <h2>AI Quiz</h2>
 
-<button onClick={generateQuiz}>
-  Generate Quiz
+<button
+  onClick={generateQuiz}
+  disabled={loading === "quiz"}
+>
+  {
+    loading === "quiz"
+      ? "⏳ Generating Quiz..."
+      : "Generate Quiz"
+  }
 </button>
 
 <br /><br />
@@ -761,8 +809,15 @@ const askQuestion = async () => {
 
 <br /><br />
 
-<button onClick={askQuestion}>
-  Ask AI
+<button
+  onClick={askQuestion}
+  disabled={loading === "voice"}
+>
+  {
+    loading === "voice"
+      ? "⏳ Thinking..."
+      : "Ask AI"
+  }
 </button>
 
 <br /><br />
